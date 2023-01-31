@@ -1,9 +1,8 @@
-package com.javaboy.vhr.config;
+package com.javaboy.vhr.loginConfig;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaboy.vhr.entity.Hr;
 import com.javaboy.vhr.entity.RespBean;
-import com.javaboy.vhr.service.HrService;
 import com.javaboy.vhr.service.impl.HrServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -11,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.*;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;

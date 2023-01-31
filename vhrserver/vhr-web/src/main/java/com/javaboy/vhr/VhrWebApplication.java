@@ -7,7 +7,6 @@ import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication
 @MapperScan(basePackages = "com.javaboy.vhr.dao")
-@EnableCaching
 public class VhrWebApplication {
 
     public static void main(String[] args) {
