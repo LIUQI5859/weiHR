@@ -9,8 +9,7 @@ spring:
     host: 127.0.0.1
     port: 6379
     database: 0
-  cache:
-    cache-names: menus_cache
+
 server:
   port: 8080
   compression:

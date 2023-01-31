@@ -18,10 +18,10 @@ import java.util.List;
  * @author makejava
  * @since 2023-01-31 10:49:36
  */
-@Service("hrService")
+@Service
 public class HrServiceImpl implements HrService, UserDetailsService {
     @Autowired
-    private HrDao hrDao;
+     HrDao hrDao;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

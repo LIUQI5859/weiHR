@@ -21,8 +21,7 @@ public class HrController {
      * 服务对象
      */
     @Autowired
-    private HrService hrService;
-
+    HrService hrService;
 
 
     /**
@@ -32,7 +31,7 @@ public class HrController {
      * @return 单条数据
      */
     @GetMapping("{id}")
-    public ResponseEntity<Hr> queryById(@PathVariable("id") Integer id) {
+    public ResponseEntity< Hr > queryById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(this.hrService.queryById(id));
     }
 
@@ -43,7 +42,7 @@ public class HrController {
      * @return 新增结果
      */
     @PostMapping
-    public ResponseEntity<Hr> add(Hr hr) {
+    public ResponseEntity< Hr > add(Hr hr) {
         return ResponseEntity.ok(this.hrService.insert(hr));
     }
 
@@ -54,7 +53,7 @@ public class HrController {
      * @return 编辑结果
      */
     @PutMapping
-    public ResponseEntity<Hr> edit(Hr hr) {
+    public ResponseEntity< Hr > edit(Hr hr) {
         return ResponseEntity.ok(this.hrService.update(hr));
     }
 
@@ -65,7 +64,7 @@ public class HrController {
      * @return 删除是否成功
      */
     @DeleteMapping
-    public ResponseEntity<Boolean> deleteById(Integer id) {
+    public ResponseEntity< Boolean > deleteById(Integer id) {
         return ResponseEntity.ok(this.hrService.deleteById(id));
     }
 

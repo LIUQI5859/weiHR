@@ -21,7 +21,7 @@ public class RoleController {
      * 服务对象
      */
     @Autowired
-    private RoleService roleService;
+    RoleService roleService;
 
 
     /**
@@ -31,7 +31,7 @@ public class RoleController {
      * @return 单条数据
      */
     @GetMapping("{id}")
-    public ResponseEntity<Role> queryById(@PathVariable("id") Integer id) {
+    public ResponseEntity< Role > queryById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(this.roleService.queryById(id));
     }
 
@@ -42,7 +42,7 @@ public class RoleController {
      * @return 新增结果
      */
     @PostMapping
-    public ResponseEntity<Role> add(Role role) {
+    public ResponseEntity< Role > add(Role role) {
         return ResponseEntity.ok(this.roleService.insert(role));
     }
 
@@ -53,7 +53,7 @@ public class RoleController {
      * @return 编辑结果
      */
     @PutMapping
-    public ResponseEntity<Role> edit(Role role) {
+    public ResponseEntity< Role > edit(Role role) {
         return ResponseEntity.ok(this.roleService.update(role));
     }
 
@@ -64,7 +64,7 @@ public class RoleController {
      * @return 删除是否成功
      */
     @DeleteMapping
-    public ResponseEntity<Boolean> deleteById(Integer id) {
+    public ResponseEntity< Boolean > deleteById(Integer id) {
         return ResponseEntity.ok(this.roleService.deleteById(id));
     }
 

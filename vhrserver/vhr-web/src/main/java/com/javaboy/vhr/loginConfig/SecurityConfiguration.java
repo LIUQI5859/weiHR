@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.*;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,6 +16,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.FilterInvocation;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -30,6 +33,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     HrServiceImpl hrServiceImpl;
 
+    @Autowired
+    CustomFilterInvocationSecurityMetadataSource customFilterInvocationSecurityMetadataSource;
+
+    @Autowired
+    CustomAccessDecisionManager customAccessDecisionManager;
+
     @Bean
      PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -44,6 +53,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .anyRequest().authenticated()
+                .withObjectPostProcessor(new ObjectPostProcessor< FilterSecurityInterceptor >() {
+                    @Override
+                    public < O extends FilterSecurityInterceptor > O postProcess(O object) {
+                        object.setAccessDecisionManager(customAccessDecisionManager);
+                        object.setSecurityMetadataSource(customFilterInvocationSecurityMetadataSource);
+
+                        return object;
+                    }
+                })
                 .and()
                 .formLogin()
                 .usernameParameter("username")
@@ -55,6 +73,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     public void onAuthenticationSuccess(HttpServletRequest req, HttpServletResponse resp, Authentication auth) throws IOException, ServletException {
                         resp.setContentType("application/json;charset=utf-8");
                         Hr hr = (Hr)auth.getPrincipal();
+                        hr.setPassword(null);
                         RespBean ok = RespBean.ok("登录成功", hr);
                         PrintWriter out = resp.getWriter();
                         String s = new ObjectMapper().writeValueAsString(ok);

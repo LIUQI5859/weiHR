@@ -4,8 +4,15 @@ import com.javaboy.vhr.entity.Menu;
 import com.javaboy.vhr.dao.MenuDao;
 import com.javaboy.vhr.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.BoundListOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * (Menu)表服务实现类
@@ -13,10 +20,34 @@ import javax.annotation.Resource;
  * @author makejava
  * @since 2023-01-31 10:49:36
  */
-@Service("menuService")
+@Service
 public class MenuServiceImpl implements MenuService {
+
+
     @Autowired
-    private MenuDao menuDao;
+    MenuDao menuDao;
+
+    @Autowired
+    RedisTemplate redisTemplate;
+
+    @Override
+    public List< Menu > getAllMenusWithRoles() {
+
+
+        BoundListOperations menusWithRoles = redisTemplate.boundListOps("menusWithRoles");
+        List< Menu > menusRedis = menusWithRoles.range(0, menusWithRoles.size());
+
+        if (menusRedis == null || menusRedis.isEmpty()) {
+            List< Menu > menusMysql = menuDao.getAllMenusWithRoles();
+            menusWithRoles.leftPush(menusMysql);
+           //menusWithRoles.expire(2, TimeUnit.MINUTES);
+            return menusMysql;
+        }else{
+            return menusRedis;
+        }
+
+
+    }
 
     /**
      * 通过ID查询单条数据
@@ -28,7 +59,6 @@ public class MenuServiceImpl implements MenuService {
     public Menu queryById(Integer id) {
         return this.menuDao.queryById(id);
     }
-
 
 
     /**

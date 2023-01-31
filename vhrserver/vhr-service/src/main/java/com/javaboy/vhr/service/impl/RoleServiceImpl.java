@@ -13,10 +13,10 @@ import javax.annotation.Resource;
  * @author makejava
  * @since 2023-01-31 10:49:36
  */
-@Service("roleService")
+@Service
 public class RoleServiceImpl implements RoleService {
     @Autowired
-    private RoleDao roleDao;
+     RoleDao roleDao;
 
     /**
      * 通过ID查询单条数据

@@ -2,6 +2,8 @@ package com.javaboy.vhr.service;
 
 import com.javaboy.vhr.entity.Menu;
 
+import java.util.List;
+
 
 /**
  * (Menu)表服务接口
@@ -44,5 +46,11 @@ public interface MenuService {
      * @return 是否成功
      */
     boolean deleteById(Integer id);
+
+    /**
+     * 获取所有menu,其中封装着roles
+     * @return
+     */
+    List< Menu> getAllMenusWithRoles();
 
 }

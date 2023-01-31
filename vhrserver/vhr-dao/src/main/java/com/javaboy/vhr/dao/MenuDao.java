@@ -72,5 +72,11 @@ public interface MenuDao {
      */
     int deleteById(Integer id);
 
+
+    /**
+     * 获取所有menu,其中封装着对应的所有role
+     * @return
+     */
+    List< Menu> getAllMenusWithRoles();
 }
 

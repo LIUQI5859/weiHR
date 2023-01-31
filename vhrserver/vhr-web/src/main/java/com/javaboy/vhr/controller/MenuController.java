@@ -21,7 +21,7 @@ public class MenuController {
      * 服务对象
      */
     @Autowired
-    private MenuService menuService;
+    MenuService menuService;
 
 
     /**
@@ -31,7 +31,7 @@ public class MenuController {
      * @return 单条数据
      */
     @GetMapping("{id}")
-    public ResponseEntity<Menu> queryById(@PathVariable("id") Integer id) {
+    public ResponseEntity< Menu > queryById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(this.menuService.queryById(id));
     }
 
@@ -42,7 +42,7 @@ public class MenuController {
      * @return 新增结果
      */
     @PostMapping
-    public ResponseEntity<Menu> add(Menu menu) {
+    public ResponseEntity< Menu > add(Menu menu) {
         return ResponseEntity.ok(this.menuService.insert(menu));
     }
 
@@ -53,7 +53,7 @@ public class MenuController {
      * @return 编辑结果
      */
     @PutMapping
-    public ResponseEntity<Menu> edit(Menu menu) {
+    public ResponseEntity< Menu > edit(Menu menu) {
         return ResponseEntity.ok(this.menuService.update(menu));
     }
 
@@ -64,7 +64,7 @@ public class MenuController {
      * @return 删除是否成功
      */
     @DeleteMapping
-    public ResponseEntity<Boolean> deleteById(Integer id) {
+    public ResponseEntity< Boolean > deleteById(Integer id) {
         return ResponseEntity.ok(this.menuService.deleteById(id));
     }
 

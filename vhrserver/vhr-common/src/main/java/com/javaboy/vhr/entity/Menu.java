@@ -1,6 +1,8 @@
 package com.javaboy.vhr.entity;
 
 import java.io.Serializable;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,6 +27,7 @@ public class Menu implements Serializable {
              private Integer requireAuth;
              private Integer parentId;
              private Integer enabled;
+             private List<Role> roles;
 
 
 }
