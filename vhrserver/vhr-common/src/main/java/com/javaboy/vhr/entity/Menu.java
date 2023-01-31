@@ -26,7 +26,7 @@ public class Menu implements Serializable {
              private Integer keepAlive;
              private Integer requireAuth;
              private Integer parentId;
-             private Integer enabled;
+             private Boolean enabled;
              private List<Role> roles;
 
 

@@ -12,7 +12,7 @@
         <result property="keepAlive" column="keepAlive" jdbcType="INTEGER"/>
         <result property="requireAuth" column="requireAuth" jdbcType="INTEGER"/>
         <result property="parentId" column="parentId" jdbcType="INTEGER"/>
-        <result property="enabled" column="enabled" jdbcType="INTEGER"/>
+        <result property="enabled" column="enabled" jdbcType="BIT"/>
     </resultMap>
     <resultMap id="MenuWithRolesMap" type="com.javaboy.vhr.entity.Menu" extends="MenuMap">
         <collection property="roles" ofType="com.javaboy.vhr.entity.Role">
