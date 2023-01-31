@@ -17,7 +17,10 @@ public class RespBean {
         this.object = object;
     }
 
-   public static RespBean ok(String message){
+    public RespBean() {
+    }
+
+    public static RespBean ok(String message){
         return new RespBean(200,message,null);
     }
 

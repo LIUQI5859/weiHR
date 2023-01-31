@@ -16,15 +16,15 @@
     </resultMap>
     <resultMap id="MenuWithRolesMap" type="com.javaboy.vhr.entity.Menu" extends="MenuMap">
         <collection property="roles" ofType="com.javaboy.vhr.entity.Role">
-            <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="nameZh" column="nameZh" jdbcType="VARCHAR"/>
+            <id property="id" column="rid" jdbcType="INTEGER"/>
+            <result property="name" column="rname" jdbcType="VARCHAR"/>
+            <result property="nameZh" column="rnameZh" jdbcType="VARCHAR"/>
         </collection>
     </resultMap>
 
     <!--查询所有menu和每个menu对应的role-->
     <select id="getAllMenusWithRoles" resultMap="MenuWithRolesMap">
-        select m.*, r.* from menu as m,menu_role as mr, role as r where m.id=mr.mid and mr.rid=r.id order by m.id
+        select m.*,r.`id` as rid,r.`name` as rname,r.`nameZh` as rnameZh from menu m,menu_role mr,role r where m.`id`=mr.`mid` and mr.`rid`=r.`id` order by m.`id`
     </select>
 
     <!--查询单个-->

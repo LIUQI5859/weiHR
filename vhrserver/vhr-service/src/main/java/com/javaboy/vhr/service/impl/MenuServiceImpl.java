@@ -3,6 +3,7 @@ package com.javaboy.vhr.service.impl;
 import com.javaboy.vhr.entity.Menu;
 import com.javaboy.vhr.dao.MenuDao;
 import com.javaboy.vhr.service.MenuService;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -33,17 +34,15 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public List< Menu > getAllMenusWithRoles() {
 
-
         BoundListOperations menusWithRoles = redisTemplate.boundListOps("menusWithRoles");
-        List< Menu > menusRedis = menusWithRoles.range(0, menusWithRoles.size());
-
+        List<Menu> menusRedis = menusWithRoles.range(0, menusWithRoles.size());
         if (menusRedis == null || menusRedis.isEmpty()) {
             List< Menu > menusMysql = menuDao.getAllMenusWithRoles();
             menusWithRoles.leftPush(menusMysql);
-           //menusWithRoles.expire(2, TimeUnit.MINUTES);
+           menusWithRoles.expire(2, TimeUnit.MINUTES);
             return menusMysql;
         }else{
-            return menusRedis;
+            return  menusRedis;
         }
 
 

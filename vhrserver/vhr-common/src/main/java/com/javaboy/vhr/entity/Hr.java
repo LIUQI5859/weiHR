@@ -51,7 +51,7 @@ public class Hr implements Serializable,UserDetails {
 
     @Override
     public Collection< ? extends GrantedAuthority > getAuthorities() {
-        List< SimpleGrantedAuthority > authorities = new ArrayList<>();
+        List< SimpleGrantedAuthority > authorities = new ArrayList<>(roles.size());
         for(Role role :roles){
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         }

@@ -26,6 +26,6 @@ public class LoginController {
 
     @GetMapping("/employee/advanced/hello")
     public String hello3(){
-        return "/employee/advance/hello";
+        return "/employee/advanced/hello";
     }
 }
