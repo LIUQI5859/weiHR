@@ -5,7 +5,7 @@
     <resultMap type="com.javaboy.vhr.entity.Role" id="RoleMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
-        <result property="namezh" column="nameZh" jdbcType="VARCHAR"/>
+        <result property="nameZh" column="nameZh" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--查询单个-->

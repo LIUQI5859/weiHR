@@ -8,10 +8,10 @@
         <result property="path" column="path" jdbcType="VARCHAR"/>
         <result property="component" column="component" jdbcType="VARCHAR"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
-        <result property="iconcls" column="iconCls" jdbcType="VARCHAR"/>
-        <result property="keepalive" column="keepAlive" jdbcType="INTEGER"/>
-        <result property="requireauth" column="requireAuth" jdbcType="INTEGER"/>
-        <result property="parentid" column="parentId" jdbcType="INTEGER"/>
+        <result property="iconCls" column="iconCls" jdbcType="VARCHAR"/>
+        <result property="keepAlive" column="keepAlive" jdbcType="INTEGER"/>
+        <result property="requireAuth" column="requireAuth" jdbcType="INTEGER"/>
+        <result property="parentId" column="parentId" jdbcType="INTEGER"/>
         <result property="enabled" column="enabled" jdbcType="INTEGER"/>
     </resultMap>
 

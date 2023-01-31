@@ -19,7 +19,7 @@ public class Role implements Serializable {
              private String name;
     /**
      * 角色名称
-     */         private String namezh;
+     */         private String nameZh;
 
 
 }

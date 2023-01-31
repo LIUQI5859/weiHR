@@ -13,13 +13,9 @@
         <module name="vhr-web" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="vhr" target="17" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="vhr" options="-parameters" />
       <module name="vhr-common" options="-parameters" />
       <module name="vhr-dao" options="-parameters" />
       <module name="vhr-service" options="-parameters" />

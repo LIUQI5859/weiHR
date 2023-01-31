@@ -8,12 +8,29 @@
         <result property="phone" column="phone" jdbcType="VARCHAR"/>
         <result property="telephone" column="telephone" jdbcType="VARCHAR"/>
         <result property="address" column="address" jdbcType="VARCHAR"/>
-        <result property="enabled" column="enabled" jdbcType="INTEGER"/>
+        <result property="enabled" column="enabled" jdbcType="BIT"/>
         <result property="username" column="username" jdbcType="VARCHAR"/>
         <result property="password" column="password" jdbcType="VARCHAR"/>
         <result property="userface" column="userface" jdbcType="VARCHAR"/>
         <result property="remark" column="remark" jdbcType="VARCHAR"/>
     </resultMap>
+    <resultMap id="HrWithRolesMap" type="com.javaboy.vhr.entity.Hr" extends="HrMap">
+        <collection property="roles" ofType="com.javaboy.vhr.entity.Role">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="nameZh" column="nameZh" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <!--根据用户名查询用户-->
+    <select id="getHrByUsername" resultMap="HrWithRolesMap">
+        select * from hr where username = #{username}
+    </select>
+
+    <!--根据用户id查询用户所拥有的所有角色-->
+    <select id="getRolesByHrId" resultType="com.javaboy.vhr.entity.Role">
+        select r.* from role as r, hr_role as hrr where r.id = hrr.rid and hrr.hrid = #{id}
+    </select>
 
     <!--查询单个-->
     <select id="queryById" resultMap="HrMap">

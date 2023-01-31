@@ -1,6 +1,7 @@
 package com.javaboy.vhr.dao;
 
 import com.javaboy.vhr.entity.Hr;
+import com.javaboy.vhr.entity.Role;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -73,5 +74,18 @@ public interface HrDao {
      */
     int deleteById(Integer id);
 
+    /**
+     * 根据用户名查询用户信息
+     * @param username 用户名
+     * @return Hr对象
+     */
+    Hr getHrByUsername(String username);
+
+    /**
+     * 根据用户id查询用户对应的所有角色
+     * @param id 用户id
+     * @return role集合
+     */
+    List< Role> getRolesByHrId(Integer id);
 }
 

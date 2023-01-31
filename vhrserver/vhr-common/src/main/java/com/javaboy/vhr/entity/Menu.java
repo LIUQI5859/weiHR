@@ -20,10 +20,10 @@ public class Menu implements Serializable {
              private String path;
              private String component;
              private String name;
-             private String iconcls;
-             private Integer keepalive;
-             private Integer requireauth;
-             private Integer parentid;
+             private String iconCls;
+             private Integer keepAlive;
+             private Integer requireAuth;
+             private Integer parentId;
              private Integer enabled;
 
 
