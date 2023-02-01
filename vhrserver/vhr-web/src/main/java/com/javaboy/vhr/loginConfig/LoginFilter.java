@@ -30,14 +30,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         if(request.getContentType().contains(MediaType.APPLICATION_JSON_VALUE) || request.getContentType().contains(MediaType.APPLICATION_JSON_UTF8_VALUE)){
             Map< String, String > loginData = new HashMap<>();
             try {
+                //将传输过来的json数据映射成map集合
                 loginData = new ObjectMapper().readValue(request.getInputStream(), Map.class);
             } catch (IOException e) {
                 e.printStackTrace();
             }finally {
+                //检测验证码是否正确
                 String code = loginData.get("code");
                 checkCode(response,code,verify_code);
             }
 
+            //获得用户名密码并验证
             String username = loginData.get(getUsernameParameter());
             String password = loginData.get(getPasswordParameter());
             if (username == null) {

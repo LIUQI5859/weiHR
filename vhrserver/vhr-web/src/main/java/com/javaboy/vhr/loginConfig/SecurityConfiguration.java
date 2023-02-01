@@ -138,6 +138,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     out.close();
                 });
 
+        //将UsernamePasswordAuthenticationFilter替换为loginFilter()
         http.addFilterAfter(loginFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }
