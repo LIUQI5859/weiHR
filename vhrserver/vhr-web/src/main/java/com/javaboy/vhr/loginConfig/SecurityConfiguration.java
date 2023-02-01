@@ -20,6 +20,7 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -49,39 +50,28 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(hrServiceImpl);
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .anyRequest().authenticated()
-                .withObjectPostProcessor(new ObjectPostProcessor< FilterSecurityInterceptor >() {
-                    @Override
-                    public < O extends FilterSecurityInterceptor > O postProcess(O object) {
-                        object.setAccessDecisionManager(customAccessDecisionManager);
-                        object.setSecurityMetadataSource(customFilterInvocationSecurityMetadataSource);
-
-                        return object;
-                    }
-                })
-                .and()
-                .formLogin()
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .loginProcessingUrl("/doLogin")
-                .loginPage("/login")
-                .successHandler(new AuthenticationSuccessHandler() {
-                    @Override
-                    public void onAuthenticationSuccess(HttpServletRequest req, HttpServletResponse resp, Authentication auth) throws IOException, ServletException {
-                        resp.setContentType("application/json;charset=utf-8");
-                        Hr hr = (Hr)auth.getPrincipal();
-                        hr.setPassword(null);
-                        RespBean ok = RespBean.ok("登录成功", hr);
-                        PrintWriter out = resp.getWriter();
-                        String s = new ObjectMapper().writeValueAsString(ok);
-                        out.write(s);
-                        out.flush();
-                        out.close();
-                    }
-                }).failureHandler(new AuthenticationFailureHandler() {
+    @Bean
+    LoginFilter loginFilter() throws Exception {
+        LoginFilter loginFilter = new LoginFilter();
+        loginFilter.setFilterProcessesUrl("/doLogin");
+        loginFilter.setAuthenticationManager(authenticationManagerBean());
+        loginFilter.setPasswordParameter("password");
+        loginFilter.setUsernameParameter("username");
+        loginFilter.setAuthenticationSuccessHandler(new AuthenticationSuccessHandler() {
+            @Override
+            public void onAuthenticationSuccess(HttpServletRequest req, HttpServletResponse resp, Authentication auth) throws IOException, ServletException {
+                resp.setContentType("application/json;charset=utf-8");
+                Hr hr = (Hr)auth.getPrincipal();
+                hr.setPassword(null);
+                RespBean ok = RespBean.ok("登录成功", hr);
+                PrintWriter out = resp.getWriter();
+                String s = new ObjectMapper().writeValueAsString(ok);
+                out.write(s);
+                out.flush();
+                out.close();
+            }
+        });
+        loginFilter.setAuthenticationFailureHandler(new AuthenticationFailureHandler() {
             @Override
             public void onAuthenticationFailure(HttpServletRequest req, HttpServletResponse resp, AuthenticationException e) throws IOException, ServletException {
                 resp.setContentType("application/json;charset=utf-8");
@@ -104,7 +94,22 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 out.flush();
                 out.close();
             }
-        }).permitAll()
+        });
+        return loginFilter;
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .withObjectPostProcessor(new ObjectPostProcessor< FilterSecurityInterceptor >() {
+                    @Override
+                    public < O extends FilterSecurityInterceptor > O postProcess(O object) {
+                        object.setAccessDecisionManager(customAccessDecisionManager);
+                        object.setSecurityMetadataSource(customFilterInvocationSecurityMetadataSource);
+
+                        return object;
+                    }
+                })
                 .and()
                 .logout()
                 .logoutSuccessHandler((req, resp, auth) -> {
@@ -118,6 +123,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 }).permitAll()
                 .and()
-                .csrf().disable();
+                .csrf().disable().exceptionHandling()
+                //没有认证时，在这里处理结果，不要重定向
+                .authenticationEntryPoint((req, resp, authException) -> {
+                    resp.setContentType("application/json;charset=utf-8");
+                    resp.setStatus(401);
+                    PrintWriter out = resp.getWriter();
+                    RespBean respBean = RespBean.error("访问失败!");
+                    if (authException instanceof InsufficientAuthenticationException) {
+                        respBean.setMessage("请求失败le，请联系管理员进行认证!");
+                    }
+                    out.write(new ObjectMapper().writeValueAsString(respBean));
+                    out.flush();
+                    out.close();
+                });
+
+        http.addFilterAfter(loginFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }

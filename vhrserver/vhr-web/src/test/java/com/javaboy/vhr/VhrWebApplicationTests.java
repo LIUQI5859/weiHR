@@ -3,6 +3,7 @@ package com.javaboy.vhr;
 import com.javaboy.vhr.dao.MenuDao;
 import com.javaboy.vhr.entity.Menu;
 import com.javaboy.vhr.entity.RespBean;
+import com.javaboy.vhr.loginConfig.VerificationCode;
 import com.javaboy.vhr.service.HrService;
 import com.javaboy.vhr.service.MenuService;
 import com.javaboy.vhr.service.impl.HrServiceImpl;
@@ -14,6 +15,11 @@ import org.springframework.data.redis.core.BoundListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +62,5 @@ class VhrWebApplicationTests {
 
         System.out.println(respBeans);
     }
-
-    
 
 }

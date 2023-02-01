@@ -31,19 +31,25 @@ public class MenuServiceImpl implements MenuService {
     @Autowired
     RedisTemplate redisTemplate;
 
+
+
     @Override
     public List< Menu > getAllMenusWithRoles() {
 
-        BoundListOperations menusWithRoles = redisTemplate.boundListOps("menusWithRoles");
-        List<Menu> menusRedis = menusWithRoles.range(0, menusWithRoles.size());
-        if (menusRedis == null || menusRedis.isEmpty()) {
-            List< Menu > menusMysql = menuDao.getAllMenusWithRoles();
-            menusWithRoles.leftPush(menusMysql);
-           menusWithRoles.expire(2, TimeUnit.MINUTES);
-            return menusMysql;
-        }else{
-            return  menusRedis;
-        }
+        List< Menu > menusMysql = menuDao.getAllMenusWithRoles();
+        return menusMysql;
+
+
+//        BoundListOperations menusWithRoles = redisTemplate.boundListOps("menusWithRoles");
+//        List<Menu> menusRedis = menusWithRoles.range(0, menusWithRoles.size());
+//        if (menusRedis == null || menusRedis.isEmpty()) {
+//            List< Menu > menusMysql = menuDao.getAllMenusWithRoles();
+//            menusWithRoles.leftPush(menusMysql);
+//           menusWithRoles.expire(2, TimeUnit.MINUTES);
+//            return menusMysql;
+//        }else{
+//            return  menusRedis;
+//        }
 
 
     }
