@@ -11,6 +11,7 @@ import org.springframework.security.authentication.*;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -48,6 +49,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(hrServiceImpl);
+    }
+
+    //解除/verifyCode的拦截
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/verifyCode");
     }
 
     @Bean
@@ -106,7 +113,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     public < O extends FilterSecurityInterceptor > O postProcess(O object) {
                         object.setAccessDecisionManager(customAccessDecisionManager);
                         object.setSecurityMetadataSource(customFilterInvocationSecurityMetadataSource);
-
                         return object;
                     }
                 })
@@ -123,15 +129,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 }).permitAll()
                 .and()
-                .csrf().disable().exceptionHandling()
-                //没有认证时，在这里处理结果，不要重定向
+                .csrf().disable()
+                .exceptionHandling()
+                //没有登录时，在这里处理结果，不要重定向
                 .authenticationEntryPoint((req, resp, authException) -> {
                     resp.setContentType("application/json;charset=utf-8");
-                    resp.setStatus(401);
                     PrintWriter out = resp.getWriter();
-                    RespBean respBean = RespBean.error("访问失败!");
+                    RespBean respBean = new RespBean();
                     if (authException instanceof InsufficientAuthenticationException) {
-                        respBean.setMessage("访问失败，没有权限");
+                        respBean.setStatus(401);
+                        respBean.setMessage("离线状态，请去登录");
                     }
                     out.write(new ObjectMapper().writeValueAsString(respBean));
                     out.flush();
@@ -139,6 +146,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 });
 
         //将UsernamePasswordAuthenticationFilter替换为loginFilter()
-        http.addFilterAfter(loginFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAt(loginFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }

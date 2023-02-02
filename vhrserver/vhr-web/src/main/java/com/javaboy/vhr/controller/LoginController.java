@@ -32,6 +32,11 @@ public class LoginController {
         return "/employee/advanced/hello";
     }
 
+    @GetMapping("/statistics/personnel/hello")
+    public String hello4(){
+        return "/statistics/personnel/hello";
+    }
+
     @GetMapping("/verifyCode")
     public void verifyCode(HttpServletRequest request, HttpServletResponse resp) throws IOException {
         VerificationCode code = new VerificationCode();

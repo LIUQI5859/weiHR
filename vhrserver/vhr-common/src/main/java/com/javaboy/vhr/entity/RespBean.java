@@ -11,14 +11,16 @@ public class RespBean {
     private String message;
     private Object object;
 
+    public RespBean() {
+    }
+
     public RespBean(Integer status, String message, Object object) {
         this.status = status;
         this.message = message;
         this.object = object;
     }
 
-    public RespBean() {
-    }
+
 
     public static RespBean ok(String message){
         return new RespBean(200,message,null);

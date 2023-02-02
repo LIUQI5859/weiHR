@@ -15,7 +15,7 @@ import java.util.Collection;
 public class CustomAccessDecisionManager implements AccessDecisionManager {
     @Override
     public void decide(Authentication authentication, Object object, Collection< ConfigAttribute > configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
-        Collection< ? extends GrantedAuthority > authorities = authentication.getAuthorities();
+
         for (ConfigAttribute configAttribute : configAttributes) {
             if("ROLE_LOGIN".equals(configAttribute.getAttribute())){
                 if(authentication instanceof AnonymousAuthenticationToken){
@@ -24,7 +24,7 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
                     return;
                 }
             }
-
+            Collection< ? extends GrantedAuthority > authorities = authentication.getAuthorities();
             for(GrantedAuthority grantedAuthority : authorities){
                 if(configAttribute.getAttribute().equals(grantedAuthority.getAuthority())){
                     return;

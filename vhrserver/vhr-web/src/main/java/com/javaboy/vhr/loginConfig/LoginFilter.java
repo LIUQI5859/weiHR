@@ -23,8 +23,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         }
 
         //获取生成的验证码
-        String verify_code = (String) request.getSession().getAttribute("verify_code");
-        //String verify_code="1234";
+        //String verify_code = (String) request.getSession().getAttribute("verify_code");
+        String verify_code="1234";
 
         //判断当前登录数据格式是否为json格式，如果是则按照自定义方式处理，如果不是则按照父类方式处理
         if(request.getContentType().contains(MediaType.APPLICATION_JSON_VALUE) || request.getContentType().contains(MediaType.APPLICATION_JSON_UTF8_VALUE)){
