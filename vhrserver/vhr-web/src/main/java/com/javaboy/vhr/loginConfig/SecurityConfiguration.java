@@ -113,6 +113,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     public < O extends FilterSecurityInterceptor > O postProcess(O object) {
                         object.setAccessDecisionManager(customAccessDecisionManager);
                         object.setSecurityMetadataSource(customFilterInvocationSecurityMetadataSource);
+
                         return object;
                     }
                 })
@@ -129,16 +130,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 }).permitAll()
                 .and()
-                .csrf().disable()
-                .exceptionHandling()
-                //没有登录时，在这里处理结果，不要重定向
+                .csrf().disable().exceptionHandling()
+                //没有认证时，在这里处理结果，不要重定向
                 .authenticationEntryPoint((req, resp, authException) -> {
                     resp.setContentType("application/json;charset=utf-8");
+                    resp.setStatus(401);
                     PrintWriter out = resp.getWriter();
-                    RespBean respBean = new RespBean();
+                    RespBean respBean = RespBean.error("访问失败!");
                     if (authException instanceof InsufficientAuthenticationException) {
-                        respBean.setStatus(401);
-                        respBean.setMessage("离线状态，请去登录");
+                        respBean.setMessage("访问失败，没有权限");
                     }
                     out.write(new ObjectMapper().writeValueAsString(respBean));
                     out.flush();
@@ -146,6 +146,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 });
 
         //将UsernamePasswordAuthenticationFilter替换为loginFilter()
-        http.addFilterAt(loginFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(loginFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }
