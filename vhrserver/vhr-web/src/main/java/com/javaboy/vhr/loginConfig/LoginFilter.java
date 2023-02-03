@@ -1,11 +1,14 @@
 package com.javaboy.vhr.loginConfig;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.javaboy.vhr.entity.Hr;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
+
+    @Autowired
+    SessionRegistry sessionRegistry;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -52,6 +58,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             username = username.trim();
             UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
             setDetails(request, authRequest);
+            Hr principal = new Hr();
+            principal.setUsername(username);
+            sessionRegistry.registerNewSession(request.getSession(true).getId(), principal);
             return this.getAuthenticationManager().authenticate(authRequest);
         }else{
 
