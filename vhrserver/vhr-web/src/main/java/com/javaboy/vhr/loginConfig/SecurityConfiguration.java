@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.FilterInvocation;
@@ -22,6 +23,8 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
+import org.springframework.security.web.session.ConcurrentSessionFilter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -55,6 +58,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/verifyCode");
+    }
+
+    @Bean
+    SessionRegistryImpl sessionRegistry() {
+        return new SessionRegistryImpl();
     }
 
     @Bean
@@ -102,6 +110,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 out.close();
             }
         });
+        ConcurrentSessionControlAuthenticationStrategy sessionStrategy = new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry());
+        sessionStrategy.setMaximumSessions(1);
+        loginFilter.setSessionAuthenticationStrategy(sessionStrategy);
         return loginFilter;
     }
 
@@ -144,6 +155,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     out.flush();
                     out.close();
                 });
+
+        http.addFilterAt(new ConcurrentSessionFilter(sessionRegistry(), event -> {
+            HttpServletResponse resp = event.getResponse();
+            resp.setContentType("application/json;charset=utf-8");
+            resp.setStatus(401);
+            PrintWriter out = resp.getWriter();
+            out.write(new ObjectMapper().writeValueAsString(RespBean.error("您已在另一台设备登录，本次登录已下线!")));
+            out.flush();
+            out.close();
+        }), ConcurrentSessionFilter.class);
 
 
         //将UsernamePasswordAuthenticationFilter替换为loginFilter()
