@@ -167,7 +167,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         }), ConcurrentSessionFilter.class);
 
 
-        //将UsernamePasswordAuthenticationFilter替换为loginFilter()
+        //将UsernamePasswordAuthenticationFilter替换为loginFilter();
         http.addFilterAfter(loginFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }
